@@ -7,9 +7,9 @@ const pathPrefix = 'test/path';
 const collection = 'cachetimes';
 const dbName = 'cache'
 const publicationCollectionName = 'test-collection'
-// Default release time is 5 minutes from now, rounded to the nearest minute
-const nowPlus5 = new Date(Date.now() + 1 * 60 * 1000);
-const releaseTime = new Date(Math.round(nowPlus5.getTime() / 60000) * 60000);
+// Default release time is 1 minute from now, rounded to the nearest minute
+const nowPlus1 = new Date(Date.now() + 1 * 60 * 1000);
+const releaseTime = new Date(Math.round(nowPlus1.getTime() / 60000) * 60000);
 
 const dbHandle = db.getSiblingDB(dbName);
 const docs = [];
