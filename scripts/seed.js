@@ -15,7 +15,7 @@ const dbHandle = db.getSiblingDB(dbName);
 const docs = [];
 for (let i = 0; i < count; i++) {
     docs.push({
-        collection: publicationCollectionName,
+        collection_id: publicationCollectionName,
         path: pathPrefix + '/' + i,
         release_time: releaseTime
     });
