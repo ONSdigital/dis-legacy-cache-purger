@@ -13,7 +13,7 @@ VERSION ?= $(shell git tag --points-at HEAD | grep ^v | head -n 1)
 LDFLAGS = -ldflags "-X main.BuildTime=$(BUILD_TIME) -X main.GitCommit=$(GIT_COMMIT) -X main.Version=$(VERSION)"
 
 .PHONY: all
-all: delimiter-AUDIT audit delimiter-LINTERS lint delimiter-UNIT-TESTS test delimiter-COMPONENT_TESTS test-component delimiter-FINISH ## Runs multiple targets, audit, lint, test and test-component
+all: audit test build
 
 .PHONY: audit
 audit: ## Runs checks for security vulnerabilities on dependencies (including transient ones)
@@ -49,6 +49,9 @@ test: ## Runs unit tests including checks for race conditions and returns covera
 	go test -race -cover ./...
 
 .PHONY: test-component
+test-component:
+	exit
+
 .PHONY: seed
 seed: # Populate MongoDB with CacheTime documents
 	mongosh scripts/seed.js

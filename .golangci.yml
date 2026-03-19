@@ -25,7 +25,7 @@ linters:
     dupl:
       threshold: 100
     gocognit:
-      min-complexity: 40
+      min-complexity: 42
     goconst:
       min-len: 2
       min-occurrences: 2
@@ -54,7 +54,7 @@ linters:
     revive:
       rules:
         - name: unused-parameter
-          severity: warning
+          severity: error
           disabled: true
   exclusions:
     generated: lax

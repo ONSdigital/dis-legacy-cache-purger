@@ -4,4 +4,4 @@ WORKDIR /app/
 
 COPY dis-legacy-cache-purger .
 
-CMD ./dis-legacy-cache-purger
+CMD ["./dis-legacy-cache-purger"]

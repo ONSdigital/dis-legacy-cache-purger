@@ -1,0 +1,21 @@
+FROM golang:1.26 AS build
+
+ENV GOCACHE=/go/.go/cache GOPATH=/go/.go/path TZ=Europe/London
+
+# Map between the working directories of dev and live
+RUN ln -s /go /dis-legacy-cache-purger
+WORKDIR /dis-legacy-cache-purger
+
+COPY . .
+
+RUN go build -o dis-legacy-cache-purger main.go \
+  && chmod +x dis-legacy-cache-purger
+
+COPY crontab.txt /crontab.txt
+
+COPY entry.sh /entry.sh
+RUN chmod 755 /entry.sh \
+    && chmod 644 /crontab.txt \
+    && ln -sf /dev/stdout /var/log/cron.log
+
+CMD ["/entry.sh"]
