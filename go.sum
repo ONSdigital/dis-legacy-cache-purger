@@ -2,6 +2,8 @@ github.com/ONSdigital/dp-api-clients-go/v2 v2.270.0 h1:kTSud/+crx9ijAHb5wOCgVx9L
 github.com/ONSdigital/dp-api-clients-go/v2 v2.270.0/go.mod h1:bLseTP21r8LCStUEeOdVPyqtrTomOFP/azPjKWW4deA=
 github.com/ONSdigital/dp-healthcheck v1.6.4 h1:FhWOuVmob36dYq7AzCdbgyf0Vk58IFitSl8y8pWJ8ck=
 github.com/ONSdigital/dp-healthcheck v1.6.4/go.mod h1:j3UNbGT4ZJg1chrRkPLE6YUVYCg1su3AAQ8frcBrvgc=
+github.com/ONSdigital/dp-legacy-cache-api v0.0.0-20260319151733-89000180f6fb h1:Bwtqvcub/nDNKRSHaTE/A8vXneg9KSYFoqGB1ssSZ3g=
+github.com/ONSdigital/dp-legacy-cache-api v0.0.0-20260319151733-89000180f6fb/go.mod h1:hkQqlALx4sXanoSICZ5DLANpmP1Ejop7M9r93vGcT30=
 github.com/ONSdigital/dp-mocking v0.11.0 h1:laln6e2JD4vtsYbg0cTw9ur1Xf390AUYdd85cG2UNQw=
 github.com/ONSdigital/dp-mocking v0.11.0/go.mod h1:oHkuukWnURnK7epY5TD5oYVkOwldR2La1D5LQBTxY0A=
 github.com/ONSdigital/dp-net/v3 v3.10.0 h1:/IF6dKThaHNpy6e+bdpkrKJQGSIjyfKSwdRXoAhOAu4=

@@ -2,10 +2,8 @@ module github.com/ONSdigital/dis-legacy-cache-purger
 
 go 1.25
 
-replace github.com/ONSdigital/dp-legacy-cache-api => ../dp-legacy-cache-api
-
 require (
-	github.com/ONSdigital/dp-legacy-cache-api v1.6.1
+	github.com/ONSdigital/dp-legacy-cache-api v0.0.0-20260319151733-89000180f6fb
 	github.com/ONSdigital/log.go/v2 v2.5.2
 	github.com/cloudflare/cloudflare-go/v6 v6.8.0
 	github.com/kelseyhightower/envconfig v1.4.0
