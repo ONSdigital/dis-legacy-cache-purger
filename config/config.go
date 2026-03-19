@@ -33,6 +33,7 @@ func Get() (*Configuration, error) {
 		return cfg, nil
 	}
 
+	//nolint:gosec // default values for local development and testing
 	cfg = &Configuration{
 		CachePurgeDiffTime:    30 * time.Second,
 		CloudflareAPIToken:    "",

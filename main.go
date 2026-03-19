@@ -74,16 +74,16 @@ func run(ctx context.Context) error {
 		// get difference between now and next minute - to the whole minute to improve accuracy
 		nextMinute := now.Truncate(time.Minute).Add(time.Minute)
 
-		result, err := purgeRunner.Run(ctx, nextMinute)
-		if err != nil {
-			errChan <- err
+		result, runErr := purgeRunner.Run(ctx, nextMinute)
+		if runErr != nil {
+			errChan <- runErr
 		}
 		resultChan <- result
 	}()
 
 	// blocks until completion, an os interrupt or a fatal error occurs
 	select {
-	case err := <-errChan:
+	case err = <-errChan:
 		log.Error(ctx, "runner error received", err)
 		return err
 	case sig := <-signals:
