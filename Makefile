@@ -49,8 +49,9 @@ test: ## Runs unit tests including checks for race conditions and returns covera
 	go test -race -cover ./...
 
 .PHONY: test-component
-test-component: ## Runs component test suite
-	go test -cover -coverpkg=github.com/ONSdigital/dis-legacy-cache-purger/... -component
+.PHONY: seed
+seed: # Populate MongoDB with CacheTime documents
+	mongosh scripts/seed.js
 
 .PHONY: help
 help: ## Show help page for list of make targets
