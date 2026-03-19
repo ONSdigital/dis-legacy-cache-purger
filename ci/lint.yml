@@ -12,4 +12,4 @@ inputs:
   - name: dis-legacy-cache-purger
 
 run:
-  path: dis-legacy-cache-purgerci/scripts/lint.sh
+  path: dis-legacy-cache-purger/ci/scripts/lint.sh
