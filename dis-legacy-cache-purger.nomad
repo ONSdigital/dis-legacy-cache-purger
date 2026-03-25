@@ -28,7 +28,7 @@ job "dis-legacy-cache-purger" {
       driver = "docker"
 
       artifact {
-        source = "s3::https://s3-eu-west-2.amazonaws.com/{{DEPLOYMENT_BUCKET}}/dis-legacy-cache-purger{{PROFILE}}/{{RELEASE}}.tar.gz"
+        source = "s3::https://s3-eu-west-2.amazonaws.com/{{DEPLOYMENT_BUCKET}}/dis-legacy-cache-purger/{{PROFILE}}/{{RELEASE}}.tar.gz"
       }
 
       config {
