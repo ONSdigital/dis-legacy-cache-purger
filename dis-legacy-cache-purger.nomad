@@ -24,7 +24,7 @@ job "dis-legacy-cache-purger" {
       mode     = "delay"
     }
 
-    task "dis-legacy-cache-purger {
+    task "dis-legacy-cache-purger" {
       driver = "docker"
 
       artifact {
@@ -34,7 +34,7 @@ job "dis-legacy-cache-purger" {
       config {
         command = "${NOMAD_TASK_DIR}/start-task"
 
-        args = ["./dis-legacy-cache-purger]
+        args = ["./dis-legacy-cache-purger"]
 
         image = "{{ECR_URL}}:concourse-{{REVISION}}"
       }
@@ -54,7 +54,7 @@ job "dis-legacy-cache-purger" {
       }
 
       vault {
-        policies = ["dis-legacy-cache-purger]
+        policies = ["dis-legacy-cache-purger"]
       }
     }
   }
