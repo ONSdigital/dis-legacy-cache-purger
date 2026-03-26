@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 	"testing"
+	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -18,8 +19,19 @@ func TestConfig(t *testing.T) {
 			})
 
 			Convey("The values should be set to the expected defaults", func() {
+				So(cfg.CachePurgeDiffTime, ShouldEqual, 30*time.Second)
+				So(cfg.CloudflareAPIToken, ShouldEqual, "")
+				So(cfg.CloudflareBatchSize, ShouldEqual, 100)
+				So(cfg.CloudflareZoneID, ShouldEqual, "")
+				So([]string(cfg.Domains), ShouldResemble, []string{"sandbox.onsdigital.co.uk"})
+				So(cfg.EnableCloudflarePurge, ShouldBeFalse)
+				So(cfg.EnableCacheAPI, ShouldBeFalse)
+				So(cfg.EnableSlackAlerts, ShouldBeFalse)
 				So(cfg.LegacyCacheAPIURL, ShouldEqual, "http://localhost:29100")
+				So(cfg.MaxParallel, ShouldEqual, 10)
 				So(cfg.ServiceToken, ShouldEqual, "cache-purger-test-auth-token")
+				So(cfg.SlackAPIToken, ShouldEqual, "")
+				So(cfg.SlackChannel, ShouldEqual, "#sandbox-publish-log")
 			})
 		})
 	})

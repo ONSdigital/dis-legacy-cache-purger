@@ -2,10 +2,35 @@ package config
 
 import (
 	"encoding/json"
+	"strings"
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
 )
+
+// DomainsList parses a comma-separated list of domains from envconfig.
+type DomainsList []string
+
+// Decode implements envconfig.Decoder to handle comma-separated domains.
+func (d *DomainsList) Decode(value string) error {
+	if strings.TrimSpace(value) == "" {
+		*d = nil
+		return nil
+	}
+
+	parts := strings.Split(value, ",")
+	result := make([]string, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		result = append(result, trimmed)
+	}
+
+	*d = result
+	return nil
+}
 
 // Config represents service configuration for dis-legacy-cache-purger
 type Configuration struct {
@@ -13,7 +38,7 @@ type Configuration struct {
 	CloudflareAPIToken    string              `envconfig:"CLOUDFLARE_API_TOKEN" json:"-"`
 	CloudflareBatchSize   int                 `envconfig:"CLOUDFLARE_BATCH_SIZE"`
 	CloudflareZoneID      string              `envconfig:"CLOUDFLARE_ZONE_ID" json:"-"`
-	Domains               []string            `envconfig:"DOMAINS" json:"domains"`
+	Domains               DomainsList         `envconfig:"DOMAINS" json:"domains"`
 	EnableCloudflarePurge bool                `envconfig:"ENABLE_CLOUDFLARE_PURGE" json:"enable_cloudflare_purge"`
 	EnableCacheAPI        bool                `envconfig:"ENABLE_CACHE_API" json:"enable_cache_api"`
 	EnableSlackAlerts     bool                `envconfig:"ENABLE_SLACK_ALERTS" json:"enable_slack_alerts"`

@@ -18,7 +18,7 @@ dis-legacy-cache-purger - a scheduler application for automating the purging of 
 | CLOUDFLARE_API_TOKEN           | ""                             | The API token for Cloudflare                                        |
 | CLOUDFLARE_BATCH_SIZE          | 100                            | Number of paths per batch for Cloudflare purge                      |
 | CLOUDFLARE_ZONE_ID             | ""                             | The Cloudflare Zone ID                                              |
-| DOMAINS                        | ["sandbox.onsdigital.co.uk"]   | List of domains to use for cache purging                            |
+| DOMAINS                        | "sandbox.onsdigital.co.uk"     | Comma separated list of domains to use for cache purging            |
 | ENABLE_CACHE_API               | false                          | Enable use of the legacy cache API                                  |
 | ENABLE_CLOUDFLARE_PURGE        | false                          | Enable Cloudflare cache purging                                     |
 | ENABLE_SLACK_ALERTS            | false                          | Enable Slack alert notifications                                    |
