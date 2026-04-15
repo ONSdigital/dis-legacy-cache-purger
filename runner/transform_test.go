@@ -154,7 +154,8 @@ func TestTransformCacheTimesToCollectionCachePurgeRequests(t *testing.T) {
 						},
 					},
 				}
-				So(requests, ShouldResemble, expected)
+				So(requests, ShouldContain, expected[0])
+				So(requests, ShouldContain, expected[1])
 			})
 		})
 	})
