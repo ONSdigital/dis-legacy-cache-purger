@@ -29,10 +29,14 @@ func mapCollectionCacheTimeMapToRequests(ctx context.Context, collectionCacheTim
 		var prefixes []string
 		var files []string
 		for _, path := range paths {
-			if strings.Contains(path, "?") {
-				files = append(files, fmt.Sprintf("https://%s", path))
-			} else {
-				prefixes = append(prefixes, path)
+			files = append(files, fmt.Sprintf("https://%s", path))
+
+			// If the path does not contain a query string, we can also purge the /data and /pdf versions of the file.
+			if !strings.Contains(path, "?") {
+				files = append(files,
+					fmt.Sprintf("https://%s/data", path),
+					fmt.Sprintf("https://%s/pdf", path),
+				)
 			}
 		}
 		requests = append(requests, CollectionCachePurgeRequest{

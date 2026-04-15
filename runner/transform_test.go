@@ -90,8 +90,15 @@ func TestMapCollectionCacheTimeMapToRequests(t *testing.T) {
 				expected := []CollectionCachePurgeRequest{
 					{
 						CollectionID: "col-1",
-						Prefixes:     []string{"/prefix1/path1", "/prefix2/path3"},
-						Files:        []string{"https:///prefix1/path2?query=1"},
+						Files: []string{
+							"https:///prefix1/path1",
+							"https:///prefix1/path1/data",
+							"https:///prefix1/path1/pdf",
+							"https:///prefix1/path2?query=1",
+							"https:///prefix2/path3",
+							"https:///prefix2/path3/data",
+							"https:///prefix2/path3/pdf",
+						},
 					},
 					{
 						CollectionID: "col-2",
@@ -122,22 +129,29 @@ func TestTransformCacheTimesToCollectionCachePurgeRequests(t *testing.T) {
 				expected := []CollectionCachePurgeRequest{
 					{
 						CollectionID: "col-1",
-						Prefixes: []string{
-							"domain1.com" + "/path1",
-							"domain2.com" + "/path1",
-						},
+						Prefixes:     nil,
 						Files: []string{
+							"https://domain1.com/path1",
+							"https://domain1.com/path1/data",
+							"https://domain1.com/path1/pdf",
+							"https://domain2.com/path1",
+							"https://domain2.com/path1/data",
+							"https://domain2.com/path1/pdf",
 							"https://domain1.com/path2?query=1",
 							"https://domain2.com/path2?query=1",
 						},
 					},
 					{
 						CollectionID: "col-2",
-						Prefixes: []string{
-							"domain1.com" + "/path3",
-							"domain2.com" + "/path3",
+						Prefixes:     nil,
+						Files: []string{
+							"https://domain1.com/path3",
+							"https://domain1.com/path3/data",
+							"https://domain1.com/path3/pdf",
+							"https://domain2.com/path3",
+							"https://domain2.com/path3/data",
+							"https://domain2.com/path3/pdf",
 						},
-						Files: nil,
 					},
 				}
 				So(requests, ShouldResemble, expected)

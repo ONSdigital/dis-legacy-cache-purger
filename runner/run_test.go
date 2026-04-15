@@ -71,7 +71,7 @@ func TestRunnerRun(t *testing.T) {
 				So(err, ShouldBeNil)
 				So(result.Success, ShouldBeTrue)
 				So(result.Results[0].Success, ShouldBeTrue)
-				So(result.Results[0].Purges, ShouldEqual, 1)
+				So(result.Results[0].Purges, ShouldEqual, 3)
 				So(sleptFor, ShouldEqual, cfg.CachePurgeDiffTime)
 
 				Convey("And the Cloudflare cache purge should have been called", func() {
@@ -138,7 +138,7 @@ func TestRunnerRun(t *testing.T) {
 				So(err, ShouldBeNil)
 				So(result.Success, ShouldBeTrue)
 				So(result.Results[0].Success, ShouldBeTrue)
-				So(result.Results[0].Purges, ShouldEqual, 1)
+				So(result.Results[0].Purges, ShouldEqual, 3)
 
 				Convey("And it should have slept for the correct duration", func() {
 					So(sleptFor, ShouldEqual, cfg.CachePurgeDiffTime+timeDiffInFuture)
