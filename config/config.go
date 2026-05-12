@@ -11,6 +11,10 @@ import (
 // DomainsList parses a comma-separated list of domains from envconfig.
 type DomainsList []string
 
+const (
+	defaultDomain = "sandbox.onsdigital.co.uk"
+)
+
 // Decode implements envconfig.Decoder to handle comma-separated domains.
 func (d *DomainsList) Decode(value string) error {
 	if strings.TrimSpace(value) == "" {
@@ -64,7 +68,7 @@ func Get() (*Configuration, error) {
 		CloudflareAPIToken:    "",
 		CloudflareBatchSize:   100,
 		CloudflareZoneID:      "",
-		Domains:               []string{"sandbox.onsdigital.co.uk"},
+		Domains:               []string{defaultDomain},
 		EnableCloudflarePurge: false,
 		EnableCacheAPI:        false,
 		EnableSlackAlerts:     false,

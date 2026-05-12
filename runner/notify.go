@@ -10,7 +10,7 @@ import (
 )
 
 func (p *PurgeRunner) sendSuccessMessageForCollection(ctx context.Context, req CollectionCachePurgeRequest, releaseTime time.Time) error {
-	log.Info(ctx, "sending success slack notification for collection", log.Data{"collection_id": req.CollectionID})
+	log.Info(ctx, "sending success slack notification for collection", log.Data{logFieldCollectionID: req.CollectionID})
 
 	pathCount := len(req.Prefixes) + len(req.Files)
 
@@ -47,7 +47,7 @@ func (p *PurgeRunner) sendSuccessMessageForCollection(ctx context.Context, req C
 }
 
 func (p *PurgeRunner) sendFailureMessageForCollection(ctx context.Context, req CollectionCachePurgeRequest, releaseTime time.Time) error {
-	log.Info(ctx, "sending failure slack notification for collection", log.Data{"collection_id": req.CollectionID})
+	log.Info(ctx, "sending failure slack notification for collection", log.Data{logFieldCollectionID: req.CollectionID})
 
 	// TODO: abstract this to reduce duplication with success message
 	pathCount := len(req.Prefixes) + len(req.Files)

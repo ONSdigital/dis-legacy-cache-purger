@@ -2,6 +2,7 @@ package runner
 
 import (
 	"context"
+	"strconv"
 	"testing"
 
 	"github.com/ONSdigital/dp-legacy-cache-api/models"
@@ -11,11 +12,11 @@ import (
 func TestMapCacheTimeByCollectionID(t *testing.T) {
 	Convey("Given a list of CacheTime objects and domains", t, func() {
 		cacheTimes := []*models.CacheTime{
-			{CollectionID: "col-1", Path: "/path1"},
-			{CollectionID: "col-1", Path: "/path2"},
-			{CollectionID: "col-2", Path: "/path3"},
+			{CollectionID: generateTestCollectionID(1), Path: generateTestPath(1)},
+			{CollectionID: generateTestCollectionID(1), Path: generateTestPath(2)},
+			{CollectionID: generateTestCollectionID(2), Path: generateTestPath(3)},
 		}
-		domains := []string{"domain1.com", "domain2.com"}
+		domains := []string{generateTestDomain(1), generateTestDomain(2)}
 		ctx := context.Background()
 
 		Convey("When mapCacheTimeByCollectionID is called", func() {
@@ -23,15 +24,15 @@ func TestMapCacheTimeByCollectionID(t *testing.T) {
 
 			Convey("Then it should return the expected mapping", func() {
 				So(result, ShouldResemble, map[string][]string{
-					"col-1": {
-						"domain1.com/path1",
-						"domain2.com/path1",
-						"domain1.com/path2",
-						"domain2.com/path2",
+					generateTestCollectionID(1): {
+						generateTestDomain(1) + generateTestPath(1),
+						generateTestDomain(2) + generateTestPath(1),
+						generateTestDomain(1) + generateTestPath(2),
+						generateTestDomain(2) + generateTestPath(2),
 					},
-					"col-2": {
-						"domain1.com/path3",
-						"domain2.com/path3",
+					generateTestCollectionID(2): {
+						generateTestDomain(1) + generateTestPath(3),
+						generateTestDomain(2) + generateTestPath(3),
 					},
 				})
 			})
@@ -40,7 +41,7 @@ func TestMapCacheTimeByCollectionID(t *testing.T) {
 
 	Convey("Given an empty list of CacheTime objects", t, func() {
 		cacheTimes := []*models.CacheTime{}
-		domains := []string{"domain1.com", "domain2.com"}
+		domains := []string{generateTestDomain(1), generateTestDomain(2)}
 		ctx := context.Background()
 
 		Convey("When mapCacheTimeByCollectionID is called", func() {
@@ -54,7 +55,7 @@ func TestMapCacheTimeByCollectionID(t *testing.T) {
 
 	Convey("Give a list of CacheTime objects but no domains", t, func() {
 		cacheTimes := []*models.CacheTime{
-			{CollectionID: "col-1", Path: "/path1"},
+			{CollectionID: generateTestCollectionID(1), Path: generateTestPath(1)},
 		}
 		domains := []string{}
 		ctx := context.Background()
@@ -72,12 +73,12 @@ func TestMapCacheTimeByCollectionID(t *testing.T) {
 func TestMapCollectionCacheTimeMapToRequests(t *testing.T) {
 	Convey("Given a collection cache time map", t, func() {
 		cacheTimeMap := map[string][]string{
-			"col-1": {
+			generateTestCollectionID(1): {
 				"/prefix1/path1",
 				"/prefix1/path2?query=1",
 				"/prefix2/path3",
 			},
-			"col-2": {
+			generateTestCollectionID(2): {
 				"/prefix3/path4?query=2",
 			},
 		}
@@ -89,7 +90,7 @@ func TestMapCollectionCacheTimeMapToRequests(t *testing.T) {
 			Convey("Then it should return the expected CollectionCachePurgeRequests", func() {
 				expected := []CollectionCachePurgeRequest{
 					{
-						CollectionID: "col-1",
+						CollectionID: generateTestCollectionID(1),
 						Files: []string{
 							"https:///prefix1/path1",
 							"https:///prefix1/path1/data",
@@ -101,7 +102,7 @@ func TestMapCollectionCacheTimeMapToRequests(t *testing.T) {
 						},
 					},
 					{
-						CollectionID: "col-2",
+						CollectionID: generateTestCollectionID(2),
 						Prefixes:     nil,
 						Files:        []string{"https:///prefix3/path4?query=2"},
 					},
@@ -115,11 +116,11 @@ func TestMapCollectionCacheTimeMapToRequests(t *testing.T) {
 func TestTransformCacheTimesToCollectionCachePurgeRequests(t *testing.T) {
 	Convey("Given a list of CacheTime objects and domains", t, func() {
 		cacheTimes := []*models.CacheTime{
-			{CollectionID: "col-1", Path: "/path1"},
-			{CollectionID: "col-1", Path: "/path2?query=1"},
-			{CollectionID: "col-2", Path: "/path3"},
+			{CollectionID: generateTestCollectionID(1), Path: generateTestPath(1)},
+			{CollectionID: generateTestCollectionID(1), Path: generateTestPath(2) + "?query=1"},
+			{CollectionID: generateTestCollectionID(2), Path: generateTestPath(3)},
 		}
-		domains := []string{"domain1.com", "domain2.com"}
+		domains := []string{generateTestDomain(1), generateTestDomain(2)}
 		ctx := context.Background()
 
 		Convey("When transformCacheTimesToCollectionCachePurgeRequests is called", func() {
@@ -128,29 +129,29 @@ func TestTransformCacheTimesToCollectionCachePurgeRequests(t *testing.T) {
 			Convey("Then it should return the expected CollectionCachePurgeRequests", func() {
 				expected := []CollectionCachePurgeRequest{
 					{
-						CollectionID: "col-1",
+						CollectionID: generateTestCollectionID(1),
 						Prefixes:     nil,
 						Files: []string{
-							"https://domain1.com/path1",
-							"https://domain1.com/path1/data",
-							"https://domain1.com/path1/pdf",
-							"https://domain2.com/path1",
-							"https://domain2.com/path1/data",
-							"https://domain2.com/path1/pdf",
-							"https://domain1.com/path2?query=1",
-							"https://domain2.com/path2?query=1",
+							"https://" + generateTestDomain(1) + generateTestPath(1),
+							"https://" + generateTestDomain(1) + generateTestPath(1) + "/data",
+							"https://" + generateTestDomain(1) + generateTestPath(1) + "/pdf",
+							"https://" + generateTestDomain(2) + generateTestPath(1),
+							"https://" + generateTestDomain(2) + generateTestPath(1) + "/data",
+							"https://" + generateTestDomain(2) + generateTestPath(1) + "/pdf",
+							"https://" + generateTestDomain(1) + generateTestPath(2) + "?query=1",
+							"https://" + generateTestDomain(2) + generateTestPath(2) + "?query=1",
 						},
 					},
 					{
-						CollectionID: "col-2",
+						CollectionID: generateTestCollectionID(2),
 						Prefixes:     nil,
 						Files: []string{
-							"https://domain1.com/path3",
-							"https://domain1.com/path3/data",
-							"https://domain1.com/path3/pdf",
-							"https://domain2.com/path3",
-							"https://domain2.com/path3/data",
-							"https://domain2.com/path3/pdf",
+							"https://" + generateTestDomain(1) + generateTestPath(3),
+							"https://" + generateTestDomain(1) + generateTestPath(3) + "/data",
+							"https://" + generateTestDomain(1) + generateTestPath(3) + "/pdf",
+							"https://" + generateTestDomain(2) + generateTestPath(3),
+							"https://" + generateTestDomain(2) + generateTestPath(3) + "/data",
+							"https://" + generateTestDomain(2) + generateTestPath(3) + "/pdf",
 						},
 					},
 				}
@@ -159,4 +160,16 @@ func TestTransformCacheTimesToCollectionCachePurgeRequests(t *testing.T) {
 			})
 		})
 	})
+}
+
+func generateTestDomain(i int) string {
+	return "domain" + strconv.Itoa(i) + ".com"
+}
+
+func generateTestPath(i int) string {
+	return "/path" + strconv.Itoa(i)
+}
+
+func generateTestCollectionID(i int) string {
+	return "col-" + strconv.Itoa(i)
 }

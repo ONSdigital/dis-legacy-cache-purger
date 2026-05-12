@@ -28,7 +28,7 @@ func TestRunnerGetCacheTimes(t *testing.T) {
 						Items: []*models.CacheTime{
 							{
 								ID:           "1",
-								CollectionID: "col-1",
+								CollectionID: generateTestCollectionID(1),
 							},
 						},
 						TotalCount: 1,
@@ -51,7 +51,7 @@ func TestRunnerGetCacheTimes(t *testing.T) {
 				So(err, ShouldBeNil)
 				So(cacheTimes, ShouldHaveLength, 1)
 				So(cacheTimes[0].ID, ShouldEqual, "1")
-				So(cacheTimes[0].CollectionID, ShouldEqual, "col-1")
+				So(cacheTimes[0].CollectionID, ShouldEqual, generateTestCollectionID(1))
 			})
 		})
 	})

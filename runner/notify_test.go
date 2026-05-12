@@ -14,6 +14,10 @@ import (
 	"github.com/ONSdigital/dis-legacy-cache-purger/config"
 )
 
+const (
+	testSlackChannel = "#test"
+)
+
 func TestSendSuccessAndFailureMessageForCollection(t *testing.T) {
 	Convey("Given a PurgeRunner with a mock Slack client that does not return an error", t, func() {
 		mockSlackClient := &mockClients.SlackClienterMock{
@@ -26,14 +30,14 @@ func TestSendSuccessAndFailureMessageForCollection(t *testing.T) {
 				SlackClient: mockSlackClient,
 			},
 			config: &config.Configuration{
-				SlackChannel: "#test",
+				SlackChannel: testSlackChannel,
 			},
 		}
 
 		req := CollectionCachePurgeRequest{
-			CollectionID: "col-1",
-			Prefixes:     []string{"/prefix1", "/prefix2"},
-			Files:        []string{"/file1", "/file2"},
+			CollectionID: generateTestCollectionID(1),
+			Prefixes:     []string{generateTestPath(1), generateTestPath(2)},
+			Files:        []string{generateTestPath(3), generateTestPath(4)},
 		}
 		releaseTime := time.Now()
 
@@ -43,7 +47,7 @@ func TestSendSuccessAndFailureMessageForCollection(t *testing.T) {
 				So(err, ShouldBeNil)
 				So(len(mockSlackClient.PostMessageCalls()), ShouldEqual, 1)
 				call := mockSlackClient.PostMessageCalls()[0]
-				So(call.Channel, ShouldEqual, "#test")
+				So(call.Channel, ShouldEqual, testSlackChannel)
 			})
 		})
 
@@ -53,7 +57,7 @@ func TestSendSuccessAndFailureMessageForCollection(t *testing.T) {
 				So(err, ShouldBeNil)
 				So(len(mockSlackClient.PostMessageCalls()), ShouldEqual, 1)
 				call := mockSlackClient.PostMessageCalls()[0]
-				So(call.Channel, ShouldEqual, "#test")
+				So(call.Channel, ShouldEqual, testSlackChannel)
 			})
 		})
 	})
@@ -71,13 +75,13 @@ func TestSendSuccessMessageForCollection_Error(t *testing.T) {
 				SlackClient: mockSlackClient,
 			},
 			config: &config.Configuration{
-				SlackChannel: "#test",
+				SlackChannel: testSlackChannel,
 			},
 		}
 		req := CollectionCachePurgeRequest{
-			CollectionID: "col-err",
-			Prefixes:     []string{"/prefix1"},
-			Files:        []string{"/file1"},
+			CollectionID: generateTestCollectionID(1),
+			Prefixes:     []string{generateTestPath(1)},
+			Files:        []string{generateTestPath(2)},
 		}
 		releaseTime := time.Now()
 

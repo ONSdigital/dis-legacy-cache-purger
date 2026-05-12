@@ -46,8 +46,8 @@ func TestRunnerRun(t *testing.T) {
 						Items: []*models.CacheTime{
 							{
 								ID:           "1",
-								Path:         "/test-path1",
-								CollectionID: "collection1",
+								Path:         generateTestPath(1),
+								CollectionID: generateTestCollectionID(1),
 							},
 						},
 						TotalCount: 1,
@@ -113,8 +113,8 @@ func TestRunnerRun(t *testing.T) {
 						Items: []*models.CacheTime{
 							{
 								ID:           "1",
-								Path:         "/test-path1",
-								CollectionID: "collection1",
+								Path:         generateTestPath(1),
+								CollectionID: generateTestCollectionID(1),
 							},
 						},
 						TotalCount: 1,

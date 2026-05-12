@@ -23,7 +23,7 @@ func (p *PurgeRunner) CachePurge(ctx context.Context, requests []CollectionCache
 }
 
 func (p *PurgeRunner) CachePurgeCollection(ctx context.Context, req CollectionCachePurgeRequest, releaseTime time.Time) CachePurgeResult {
-	logData := log.Data{"collection_id": req.CollectionID}
+	logData := log.Data{logFieldCollectionID: req.CollectionID}
 
 	log.Info(ctx, "purging cache for collection", logData)
 

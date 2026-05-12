@@ -41,9 +41,9 @@ func TestRunnerCollectionCachePurge(t *testing.T) {
 
 		Convey("When CachePurgeCollection is called with valid prefixes and files", func() {
 			req := CollectionCachePurgeRequest{
-				CollectionID: "col-1",
-				Prefixes:     []string{"/path/prefix1/", "/path/prefix2/"},
-				Files:        []string{"/path/file1.html", "/path/file2.html"},
+				CollectionID: generateTestCollectionID(1),
+				Prefixes:     []string{generateTestPath(1), generateTestPath(2)},
+				Files:        []string{generateTestPath(3), generateTestPath(4)},
 			}
 			releaseTime := time.Now()
 			result := purger.CachePurgeCollection(context.Background(), req, releaseTime)
@@ -67,7 +67,7 @@ func TestRunnerCollectionCachePurge(t *testing.T) {
 			numPrefixes := 101
 
 			req := CollectionCachePurgeRequest{
-				CollectionID: "col-1",
+				CollectionID: generateTestCollectionID(1),
 				Prefixes:     generatePrefixes(numPrefixes),
 			}
 			releaseTime := time.Now()
@@ -92,7 +92,7 @@ func TestRunnerCollectionCachePurge(t *testing.T) {
 			numPurges := 101
 
 			req := CollectionCachePurgeRequest{
-				CollectionID: "col-1",
+				CollectionID: generateTestCollectionID(1),
 				Prefixes:     generatePrefixes(numPurges),
 				Files:        generateFiles(numPurges),
 			}
@@ -140,9 +140,9 @@ func TestRunnerCollectionCachePurge(t *testing.T) {
 
 		Convey("When CachePurgeCollection is called with valid prefixes and files", func() {
 			req := CollectionCachePurgeRequest{
-				CollectionID: "col-1",
-				Prefixes:     []string{"/path/prefix1/", "/path/prefix2/"},
-				Files:        []string{"/path/file1.html", "/path/file2.html"},
+				CollectionID: generateTestCollectionID(1),
+				Prefixes:     []string{generateTestPath(1), generateTestPath(2)},
+				Files:        []string{generateTestPath(3), generateTestPath(4)},
 			}
 			releaseTime := time.Now()
 			result := purger.CachePurgeCollection(context.Background(), req, releaseTime)
@@ -191,14 +191,14 @@ func TestRunnerCachePurge(t *testing.T) {
 		Convey("When CachePurge is called with multiple collections", func() {
 			reqs := []CollectionCachePurgeRequest{
 				{
-					CollectionID: "col-1",
-					Prefixes:     []string{"/path/prefix1/", "/path/prefix2/"},
-					Files:        []string{"/path/file1.html", "/path/file2.html"},
+					CollectionID: generateTestCollectionID(1),
+					Prefixes:     []string{generateTestPath(1), generateTestPath(2)},
+					Files:        []string{generateTestPath(3), generateTestPath(4)},
 				},
 				{
-					CollectionID: "col-2",
-					Prefixes:     []string{"/path/prefix3/"},
-					Files:        []string{"/path/file3.html"},
+					CollectionID: generateTestCollectionID(2),
+					Prefixes:     []string{generateTestPath(5)},
+					Files:        []string{generateTestPath(6)},
 				},
 			}
 			releaseTime := time.Now()

@@ -35,10 +35,10 @@ func (p *PurgeRunner) Run(ctx context.Context, publishTime time.Time) (*PurgeRun
 
 	for _, req := range cachePurgeRequests {
 		log.Info(ctx, "waiting to purge cache for collection", log.Data{
-			"collection_id": req.CollectionID,
-			"total_paths":   len(req.Prefixes) + len(req.Files),
-			"prefixes":      len(req.Prefixes),
-			"files":         len(req.Files),
+			logFieldCollectionID: req.CollectionID,
+			"total_paths":        len(req.Prefixes) + len(req.Files),
+			"prefixes":           len(req.Prefixes),
+			"files":              len(req.Files),
 		})
 	}
 

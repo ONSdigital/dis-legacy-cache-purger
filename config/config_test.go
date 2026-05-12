@@ -23,7 +23,7 @@ func TestConfig(t *testing.T) {
 				So(cfg.CloudflareAPIToken, ShouldEqual, "")
 				So(cfg.CloudflareBatchSize, ShouldEqual, 100)
 				So(cfg.CloudflareZoneID, ShouldEqual, "")
-				So([]string(cfg.Domains), ShouldResemble, []string{"sandbox.onsdigital.co.uk"})
+				So([]string(cfg.Domains), ShouldResemble, []string{defaultDomain})
 				So(cfg.EnableCloudflarePurge, ShouldBeFalse)
 				So(cfg.EnableCacheAPI, ShouldBeFalse)
 				So(cfg.EnableSlackAlerts, ShouldBeFalse)
