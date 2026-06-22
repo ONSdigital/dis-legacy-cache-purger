@@ -6,14 +6,23 @@ ENV GOCACHE=/go/.go/cache GOPATH=/go/.go/path TZ=Europe/London
 RUN ln -s /go /dis-legacy-cache-purger
 WORKDIR /dis-legacy-cache-purger
 
+# Add cron as a service
+RUN apt-get update && apt-get install -y cron && rm -rf /var/lib/apt/lists/*
+
 COPY . .
 
-RUN go build -o dis-legacy-cache-purger main.go \
-  && chmod +x dis-legacy-cache-purger
+# Build the Go application
+RUN go build -o /build/dis-legacy-cache-purger main.go
 
+RUN chmod +x /build/dis-legacy-cache-purger
+
+# Copy entry script and crontab file
+COPY entry.sh /entry.sh
 COPY crontab.txt /crontab.txt
 
-COPY entry.sh /entry.sh
+# Set up cron job
+RUN crontab /crontab.txt
+
 RUN chmod 755 /entry.sh \
     && chmod 644 /crontab.txt \
     && ln -sf /dev/stdout /var/log/cron.log
