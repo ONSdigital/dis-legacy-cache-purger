@@ -14,10 +14,15 @@ func (p *PurgeRunner) sendSuccessMessageForCollection(ctx context.Context, req C
 
 	pathCount := len(req.Prefixes) + len(req.Files)
 
+	collectionText := req.CollectionID
+	if req.CollectionTitle != "" {
+		collectionText = req.CollectionTitle
+	}
+
 	fields := []*slack.TextBlockObject{
 		slack.NewTextBlockObject("mrkdwn", "*Collection*", false, false),
 		slack.NewTextBlockObject("mrkdwn", "*Publish date*", false, false),
-		slack.NewTextBlockObject("plain_text", req.CollectionID, false, false),
+		slack.NewTextBlockObject("plain_text", collectionText, false, false),
 		slack.NewTextBlockObject("plain_text", releaseTime.Format(time.RFC3339), false, false),
 		slack.NewTextBlockObject("mrkdwn", "*Number of paths purged*", false, false),
 		slack.NewTextBlockObject("mrkdwn", "*Time of cache purge*", false, false),
@@ -52,10 +57,15 @@ func (p *PurgeRunner) sendFailureMessageForCollection(ctx context.Context, req C
 	// TODO: abstract this to reduce duplication with success message
 	pathCount := len(req.Prefixes) + len(req.Files)
 
+	collectionText := req.CollectionID
+	if req.CollectionTitle != "" {
+		collectionText = req.CollectionTitle
+	}
+
 	fields := []*slack.TextBlockObject{
 		slack.NewTextBlockObject("mrkdwn", "*Collection*", false, false),
 		slack.NewTextBlockObject("mrkdwn", "*Publish date*", false, false),
-		slack.NewTextBlockObject("plain_text", req.CollectionID, false, false),
+		slack.NewTextBlockObject("plain_text", collectionText, false, false),
 		slack.NewTextBlockObject("plain_text", releaseTime.Format(time.RFC3339), false, false),
 		slack.NewTextBlockObject("mrkdwn", "*Number of paths purged*", false, false),
 		slack.NewTextBlockObject("mrkdwn", "*Time of cache purge*", false, false),

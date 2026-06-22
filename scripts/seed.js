@@ -6,7 +6,8 @@ const count = 1000;
 const pathPrefix = 'test/path';
 const collection = 'cachetimes';
 const dbName = 'cache'
-const publicationCollectionName = 'test-collection'
+const publicationCollectionID = 'test-collection'
+const publicationCollectionName = 'Test Collection'
 // Default release time is 1 minute from now, rounded to the nearest minute
 const nowPlus1 = new Date(Date.now() + 1 * 60 * 1000);
 const releaseTime = new Date(Math.round(nowPlus1.getTime() / 60000) * 60000);
@@ -15,7 +16,8 @@ const dbHandle = db.getSiblingDB(dbName);
 const docs = [];
 for (let i = 0; i < count; i++) {
     docs.push({
-        collection_id: publicationCollectionName,
+        collection_id: publicationCollectionID,
+        collection_title: publicationCollectionName,
         path: pathPrefix + '/' + i,
         release_time: releaseTime
     });

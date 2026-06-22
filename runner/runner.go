@@ -20,9 +20,10 @@ type PurgeRunResult struct {
 }
 
 type CollectionCachePurgeRequest struct {
-	CollectionID string
-	Prefixes     []string
-	Files        []string
+	CollectionID    string
+	CollectionTitle string
+	Prefixes        []string
+	Files           []string
 }
 
 type Runner interface {

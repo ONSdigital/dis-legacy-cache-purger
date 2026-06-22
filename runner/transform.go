@@ -8,8 +8,14 @@ import (
 	"github.com/ONSdigital/dp-legacy-cache-api/models"
 )
 
-func mapCacheTimeByCollectionID(ctx context.Context, cacheTimes []*models.CacheTime, domains []string) map[string][]string {
-	result := make(map[string][]string)
+type CollectionCachePaths struct {
+	collectionID    string
+	collectionTitle string
+	paths           []string
+}
+
+func mapCacheTimeByCollection(ctx context.Context, cacheTimes []*models.CacheTime, domains []string) map[string]CollectionCachePaths {
+	result := make(map[string]CollectionCachePaths)
 	for _, ct := range cacheTimes {
 		if ct == nil {
 			continue
@@ -17,18 +23,22 @@ func mapCacheTimeByCollectionID(ctx context.Context, cacheTimes []*models.CacheT
 		collectionID := ct.CollectionID
 		for _, domain := range domains {
 			prefixedPath := fmt.Sprintf("%s%s", domain, ct.Path)
-			result[collectionID] = append(result[collectionID], prefixedPath)
+			collectionCacheTimes := result[collectionID]
+			collectionCacheTimes.collectionID = collectionID
+			collectionCacheTimes.collectionTitle = ct.CollectionTitle
+			collectionCacheTimes.paths = append(collectionCacheTimes.paths, prefixedPath)
+			result[collectionID] = collectionCacheTimes
 		}
 	}
 	return result
 }
 
-func mapCollectionCacheTimeMapToRequests(ctx context.Context, collectionCacheTimeMap map[string][]string) []CollectionCachePurgeRequest {
+func mapCollectionCacheTimeMapToRequests(ctx context.Context, collectionCacheTimeMap map[string]CollectionCachePaths) []CollectionCachePurgeRequest {
 	requests := make([]CollectionCachePurgeRequest, 0, len(collectionCacheTimeMap))
-	for collectionID, paths := range collectionCacheTimeMap {
+	for collectionID, collectionCachePaths := range collectionCacheTimeMap {
 		var prefixes []string
 		var files []string
-		for _, path := range paths {
+		for _, path := range collectionCachePaths.paths {
 			if strings.Contains(path, "/timeseries/") {
 				// exclude timeseries paths.
 				continue
@@ -46,15 +56,16 @@ func mapCollectionCacheTimeMapToRequests(ctx context.Context, collectionCacheTim
 			}
 		}
 		requests = append(requests, CollectionCachePurgeRequest{
-			CollectionID: collectionID,
-			Prefixes:     prefixes,
-			Files:        files,
+			CollectionID:    collectionID,
+			CollectionTitle: collectionCachePaths.collectionTitle,
+			Prefixes:        prefixes,
+			Files:           files,
 		})
 	}
 	return requests
 }
 
 func transformCacheTimesToCollectionCachePurgeRequests(ctx context.Context, cacheTimes []*models.CacheTime, domains []string) []CollectionCachePurgeRequest {
-	cacheTimesByCollectionID := mapCacheTimeByCollectionID(ctx, cacheTimes, domains)
+	cacheTimesByCollectionID := mapCacheTimeByCollection(ctx, cacheTimes, domains)
 	return mapCollectionCacheTimeMapToRequests(ctx, cacheTimesByCollectionID)
 }

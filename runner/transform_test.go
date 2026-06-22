@@ -9,30 +9,38 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestMapCacheTimeByCollectionID(t *testing.T) {
+func TestMapCacheTimeByCollection(t *testing.T) {
 	Convey("Given a list of CacheTime objects and domains", t, func() {
 		cacheTimes := []*models.CacheTime{
-			{CollectionID: generateTestCollectionID(1), Path: generateTestPath(1)},
-			{CollectionID: generateTestCollectionID(1), Path: generateTestPath(2)},
-			{CollectionID: generateTestCollectionID(2), Path: generateTestPath(3)},
+			{CollectionID: generateTestCollectionID(1), CollectionTitle: generateTestCollectionTitle(1), Path: generateTestPath(1)},
+			{CollectionID: generateTestCollectionID(1), CollectionTitle: generateTestCollectionTitle(1), Path: generateTestPath(2)},
+			{CollectionID: generateTestCollectionID(2), CollectionTitle: generateTestCollectionTitle(2), Path: generateTestPath(3)},
 		}
 		domains := []string{generateTestDomain(1), generateTestDomain(2)}
 		ctx := context.Background()
 
-		Convey("When mapCacheTimeByCollectionID is called", func() {
-			result := mapCacheTimeByCollectionID(ctx, cacheTimes, domains)
+		Convey("When mapCacheTimeByCollection is called", func() {
+			result := mapCacheTimeByCollection(ctx, cacheTimes, domains)
 
 			Convey("Then it should return the expected mapping", func() {
-				So(result, ShouldResemble, map[string][]string{
+				So(result, ShouldResemble, map[string]CollectionCachePaths{
 					generateTestCollectionID(1): {
-						generateTestDomain(1) + generateTestPath(1),
-						generateTestDomain(2) + generateTestPath(1),
-						generateTestDomain(1) + generateTestPath(2),
-						generateTestDomain(2) + generateTestPath(2),
+						collectionID:    generateTestCollectionID(1),
+						collectionTitle: generateTestCollectionTitle(1),
+						paths: []string{
+							generateTestDomain(1) + generateTestPath(1),
+							generateTestDomain(2) + generateTestPath(1),
+							generateTestDomain(1) + generateTestPath(2),
+							generateTestDomain(2) + generateTestPath(2),
+						},
 					},
 					generateTestCollectionID(2): {
-						generateTestDomain(1) + generateTestPath(3),
-						generateTestDomain(2) + generateTestPath(3),
+						collectionID:    generateTestCollectionID(2),
+						collectionTitle: generateTestCollectionTitle(2),
+						paths: []string{
+							generateTestDomain(1) + generateTestPath(3),
+							generateTestDomain(2) + generateTestPath(3),
+						},
 					},
 				})
 			})
@@ -44,8 +52,8 @@ func TestMapCacheTimeByCollectionID(t *testing.T) {
 		domains := []string{generateTestDomain(1), generateTestDomain(2)}
 		ctx := context.Background()
 
-		Convey("When mapCacheTimeByCollectionID is called", func() {
-			result := mapCacheTimeByCollectionID(ctx, cacheTimes, domains)
+		Convey("When mapCacheTimeByCollection is called", func() {
+			result := mapCacheTimeByCollection(ctx, cacheTimes, domains)
 
 			Convey("Then it should return an empty mapping", func() {
 				So(result, ShouldBeEmpty)
@@ -55,16 +63,16 @@ func TestMapCacheTimeByCollectionID(t *testing.T) {
 
 	Convey("Give a list of CacheTime objects but no domains", t, func() {
 		cacheTimes := []*models.CacheTime{
-			{CollectionID: generateTestCollectionID(1), Path: generateTestPath(1)},
+			{CollectionID: generateTestCollectionID(1), CollectionTitle: generateTestCollectionTitle(1), Path: generateTestPath(1)},
 		}
 		domains := []string{}
 		ctx := context.Background()
 
-		Convey("When mapCacheTimeByCollectionID is called", func() {
-			result := mapCacheTimeByCollectionID(ctx, cacheTimes, domains)
+		Convey("When mapCacheTimeByCollection is called", func() {
+			result := mapCacheTimeByCollection(ctx, cacheTimes, domains)
 
 			Convey("Then it should return an empty map", func() {
-				So(result, ShouldResemble, map[string][]string{})
+				So(result, ShouldResemble, map[string]CollectionCachePaths{})
 			})
 		})
 	})
@@ -72,14 +80,22 @@ func TestMapCacheTimeByCollectionID(t *testing.T) {
 
 func TestMapCollectionCacheTimeMapToRequests(t *testing.T) {
 	Convey("Given a collection cache time map", t, func() {
-		cacheTimeMap := map[string][]string{
-			generateTestCollectionID(1): {
-				"/prefix1/path1",
-				"/prefix1/path2?query=1",
-				"/prefix2/path3",
+		cacheTimeMap := map[string]CollectionCachePaths{
+			generateTestCollectionID(1): CollectionCachePaths{
+				collectionID:    generateTestCollectionID(1),
+				collectionTitle: generateTestCollectionTitle(1),
+				paths: []string{
+					"/prefix1/path1",
+					"/prefix1/path2?query=1",
+					"/prefix2/path3",
+				},
 			},
-			generateTestCollectionID(2): {
-				"/prefix3/path4?query=2",
+			generateTestCollectionID(2): CollectionCachePaths{
+				collectionID:    generateTestCollectionID(2),
+				collectionTitle: generateTestCollectionTitle(2),
+				paths: []string{
+					"/prefix3/path4?query=2",
+				},
 			},
 		}
 		ctx := context.Background()
@@ -90,7 +106,8 @@ func TestMapCollectionCacheTimeMapToRequests(t *testing.T) {
 			Convey("Then it should return the expected CollectionCachePurgeRequests", func() {
 				expected := []CollectionCachePurgeRequest{
 					{
-						CollectionID: generateTestCollectionID(1),
+						CollectionID:    generateTestCollectionID(1),
+						CollectionTitle: generateTestCollectionTitle(1),
 						Files: []string{
 							"https:///prefix1/path1",
 							"https:///prefix1/path1/data",
@@ -102,9 +119,10 @@ func TestMapCollectionCacheTimeMapToRequests(t *testing.T) {
 						},
 					},
 					{
-						CollectionID: generateTestCollectionID(2),
-						Prefixes:     nil,
-						Files:        []string{"https:///prefix3/path4?query=2"},
+						CollectionID:    generateTestCollectionID(2),
+						CollectionTitle: generateTestCollectionTitle(2),
+						Prefixes:        nil,
+						Files:           []string{"https:///prefix3/path4?query=2"},
 					},
 				}
 				So(requests, ShouldResemble, expected)
@@ -116,9 +134,9 @@ func TestMapCollectionCacheTimeMapToRequests(t *testing.T) {
 func TestTransformCacheTimesToCollectionCachePurgeRequests(t *testing.T) {
 	Convey("Given a list of CacheTime objects and domains", t, func() {
 		cacheTimes := []*models.CacheTime{
-			{CollectionID: generateTestCollectionID(1), Path: generateTestPath(1)},
-			{CollectionID: generateTestCollectionID(1), Path: generateTestPath(2) + "?query=1"},
-			{CollectionID: generateTestCollectionID(2), Path: generateTestPath(3)},
+			{CollectionID: generateTestCollectionID(1), CollectionTitle: generateTestCollectionTitle(1), Path: generateTestPath(1)},
+			{CollectionID: generateTestCollectionID(1), CollectionTitle: generateTestCollectionTitle(1), Path: generateTestPath(2) + "?query=1"},
+			{CollectionID: generateTestCollectionID(2), CollectionTitle: generateTestCollectionTitle(2), Path: generateTestPath(3)},
 		}
 		domains := []string{generateTestDomain(1), generateTestDomain(2)}
 		ctx := context.Background()
@@ -129,8 +147,9 @@ func TestTransformCacheTimesToCollectionCachePurgeRequests(t *testing.T) {
 			Convey("Then it should return the expected CollectionCachePurgeRequests", func() {
 				expected := []CollectionCachePurgeRequest{
 					{
-						CollectionID: generateTestCollectionID(1),
-						Prefixes:     nil,
+						CollectionID:    generateTestCollectionID(1),
+						CollectionTitle: generateTestCollectionTitle(1),
+						Prefixes:        nil,
 						Files: []string{
 							"https://" + generateTestDomain(1) + generateTestPath(1),
 							"https://" + generateTestDomain(1) + generateTestPath(1) + "/data",
@@ -143,8 +162,9 @@ func TestTransformCacheTimesToCollectionCachePurgeRequests(t *testing.T) {
 						},
 					},
 					{
-						CollectionID: generateTestCollectionID(2),
-						Prefixes:     nil,
+						CollectionID:    generateTestCollectionID(2),
+						CollectionTitle: generateTestCollectionTitle(2),
+						Prefixes:        nil,
 						Files: []string{
 							"https://" + generateTestDomain(1) + generateTestPath(3),
 							"https://" + generateTestDomain(1) + generateTestPath(3) + "/data",
@@ -172,4 +192,8 @@ func generateTestPath(i int) string {
 
 func generateTestCollectionID(i int) string {
 	return "col-" + strconv.Itoa(i)
+}
+
+func generateTestCollectionTitle(i int) string {
+	return "Collection " + strconv.Itoa(i)
 }
