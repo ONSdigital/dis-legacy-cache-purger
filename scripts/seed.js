@@ -1,20 +1,21 @@
 // scripts/seed.js
 // Usage: mongosh <mongo-uri> scripts/seed.js
+// Parameters injected via --eval by the Makefile seed target
 
 const pdfPaths = ['/bulletins/test', '/articles/test', '/compendium_chapter/test'];
 const dataPaths = ['/datasets/test'];
 const normalCount = count - pdfPaths.length * pdfCount - dataPaths.length * dataCount;
 const collection = 'cachetimes';
-const dbName = 'cache'
-const publicationCollectionID = 'test-collection'
-const publicationCollectionName = 'Test Collection'
+const dbName = 'cache';
+const publicationCollectionID = collectionID;
+const publicationCollectionName = collectionID;
 // Default release time is 1 minute from now, rounded to the nearest minute
 const nowPlus1 = new Date(Date.now() + 1 * 60 * 1000);
 const releaseTime = new Date(Math.round(nowPlus1.getTime() / 60000) * 60000);
 
 const dbHandle = db.getSiblingDB(dbName);
 const docs = [];
-for (let i = 0; i < count; i++) {
+for (let i = 0; i < normalCount; i++) {
     docs.push({
         collection_id: publicationCollectionID,
         collection_title: publicationCollectionName,

@@ -13,7 +13,7 @@ This seed script will seed your local mongo database with a number of cache time
 To run:
 
 ```sh
-    make seed
+make seed
 ```
 
 To override parameters:
@@ -21,6 +21,7 @@ To override parameters:
 ```sh
 make seed SEED_COUNT=500
 make seed SEED_COUNT=500 SEED_PDF_COUNT=50
+make seed SEED_COUNT=500 SEED_DATA_COUNT=50
 make seed SEED_COUNT=1000 SEED_COLLECTION_ID=my-collection
 ```
 
