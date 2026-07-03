@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -119,6 +120,16 @@ func getCloudflareClient(enabled bool, token string) clients.CloudflareCacheClie
 	if enabled {
 		cloudflareClient = cloudflare.NewClient(
 			option.WithAPIToken(token),
+			option.WithMiddleware(func(req *http.Request, next option.MiddlewareNext) (*http.Response, error) {
+				res, err := next(req)
+				if res != nil {
+					log.Info(req.Context(), "cloudflare api response", log.Data{
+						"status": res.StatusCode,
+						"path":   req.URL.Path,
+					})
+				}
+				return res, err
+			}),
 		).Cache
 	} else {
 		cloudflareClient = &mockClients.CloudflareCacheClienterMock{
