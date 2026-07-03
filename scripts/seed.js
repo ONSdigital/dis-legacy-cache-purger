@@ -1,9 +1,9 @@
 // scripts/seed.js
 // Usage: mongosh <mongo-uri> scripts/seed.js
 
-//TODO: make these parameters configurable via command line args
-const count = 1000;
-const pathPrefix = 'test/path';
+const pdfPaths = ['/bulletins/test', '/articles/test', '/compendium_chapter/test'];
+const dataPaths = ['/datasets/test'];
+const normalCount = count - pdfPaths.length * pdfCount - dataPaths.length * dataCount;
 const collection = 'cachetimes';
 const dbName = 'cache'
 const publicationCollectionID = 'test-collection'
@@ -18,9 +18,30 @@ for (let i = 0; i < count; i++) {
     docs.push({
         collection_id: publicationCollectionID,
         collection_title: publicationCollectionName,
-        path: pathPrefix + '/' + i,
+        path: path + '/' + i,
         release_time: releaseTime
     });
 }
+for (const path of pdfPaths) {
+    for (let i = 0; i < pdfCount; i++) {
+        docs.push({
+            collection_id: publicationCollectionID,
+            collection_title: publicationCollectionName,
+            path: path + '/' + i,
+            release_time: releaseTime
+        });
+    }
+}
+for (const path of dataPaths) {
+    for (let i = 0; i < dataCount; i++) {
+        docs.push({
+            collection_id: publicationCollectionID,
+            collection_title: publicationCollectionName,
+            path: path + '/' + i,
+            release_time: releaseTime
+        });
+    }
+}
+const totalCount = normalCount + pdfPaths.length * pdfCount + dataPaths.length * dataCount;
 dbHandle[collection].insertMany(docs);
-print('Inserted ' + count + ' documents into cache.' + collection);
+print('Inserted ' + totalCount + ' documents into cache.' + collection + ' (' + normalCount + ' normal, ' + pdfPaths.length * pdfCount + ' pdf-eligible, ' + dataPaths.length * dataCount + ' data-eligible)');

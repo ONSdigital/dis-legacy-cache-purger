@@ -9,6 +9,8 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+const testPath = "/path"
+
 func TestMapCacheTimeByCollection(t *testing.T) {
 	Convey("Given a list of CacheTime objects and domains", t, func() {
 		cacheTimes := []*models.CacheTime{
@@ -99,9 +101,11 @@ func TestMapCollectionCacheTimeMapToRequests(t *testing.T) {
 			},
 		}
 		ctx := context.Background()
+		dataPaths := []string{"/prefix2/"}
+		pdfPaths := []string{"/prefix1/"}
 
 		Convey("When mapCollectionCacheTimeMapToRequests is called", func() {
-			requests := mapCollectionCacheTimeMapToRequests(ctx, cacheTimeMap)
+			requests := mapCollectionCacheTimeMapToRequests(ctx, cacheTimeMap, dataPaths, pdfPaths)
 
 			Convey("Then it should return the expected CollectionCachePurgeRequests", func() {
 				expected := []CollectionCachePurgeRequest{
@@ -110,12 +114,10 @@ func TestMapCollectionCacheTimeMapToRequests(t *testing.T) {
 						CollectionTitle: generateTestCollectionTitle(1),
 						Files: []string{
 							"https:///prefix1/path1",
-							"https:///prefix1/path1/data",
 							"https:///prefix1/path1/pdf",
 							"https:///prefix1/path2?query=1",
 							"https:///prefix2/path3",
 							"https:///prefix2/path3/data",
-							"https:///prefix2/path3/pdf",
 						},
 					},
 					{
@@ -142,7 +144,7 @@ func TestTransformCacheTimesToCollectionCachePurgeRequests(t *testing.T) {
 		ctx := context.Background()
 
 		Convey("When transformCacheTimesToCollectionCachePurgeRequests is called", func() {
-			requests := transformCacheTimesToCollectionCachePurgeRequests(ctx, cacheTimes, domains)
+			requests := transformCacheTimesToCollectionCachePurgeRequests(ctx, cacheTimes, domains, []string{testPath}, []string{testPath})
 
 			Convey("Then it should return the expected CollectionCachePurgeRequests", func() {
 				expected := []CollectionCachePurgeRequest{
@@ -187,7 +189,7 @@ func generateTestDomain(i int) string {
 }
 
 func generateTestPath(i int) string {
-	return "/path" + strconv.Itoa(i)
+	return testPath + strconv.Itoa(i)
 }
 
 func generateTestCollectionID(i int) string {

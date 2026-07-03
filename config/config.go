@@ -8,15 +8,15 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
-// DomainsList parses a comma-separated list of domains from envconfig.
-type DomainsList []string
+// StringList parses a comma-separated list of strings from envconfig.
+type StringList []string
 
 const (
 	defaultDomain = "sandbox.onsdigital.co.uk"
 )
 
-// Decode implements envconfig.Decoder to handle comma-separated domains.
-func (d *DomainsList) Decode(value string) error {
+// Decode implements envconfig.Decoder to handle comma-separated strings.
+func (d *StringList) Decode(value string) error {
 	if strings.TrimSpace(value) == "" {
 		*d = nil
 		return nil
@@ -42,12 +42,14 @@ type Configuration struct {
 	CloudflareAPIToken    string              `envconfig:"CLOUDFLARE_API_TOKEN" json:"-"`
 	CloudflareBatchSize   int                 `envconfig:"CLOUDFLARE_BATCH_SIZE"`
 	CloudflareZoneID      string              `envconfig:"CLOUDFLARE_ZONE_ID" json:"-"`
-	Domains               DomainsList         `envconfig:"DOMAINS" json:"domains"`
+	DataPaths             StringList          `envconfig:"DATA_PATHS" json:"data_paths"`
+	Domains               StringList          `envconfig:"DOMAINS" json:"domains"`
 	EnableCloudflarePurge bool                `envconfig:"ENABLE_CLOUDFLARE_PURGE" json:"enable_cloudflare_purge"`
 	EnableCacheAPI        bool                `envconfig:"ENABLE_CACHE_API" json:"enable_cache_api"`
 	EnableSlackAlerts     bool                `envconfig:"ENABLE_SLACK_ALERTS" json:"enable_slack_alerts"`
 	LegacyCacheAPIURL     string              `envconfig:"LEGACY_CACHE_API_URL"`
 	MaxParallel           int                 `envconfig:"MAX_PARALLEL" json:"max_parallel"`
+	PDFPaths              StringList          `envconfig:"PDF_PATHS" json:"pdf_paths"`
 	ServiceToken          string              `envconfig:"LEGACY_CACHE_API_SERVICE_TOKEN"  json:"-"`
 	SlackAPIToken         string              `envconfig:"SLACK_API_TOKEN" json:"-"`
 	SlackChannel          string              `envconfig:"SLACK_CHANNEL" json:"slack_channel"`
@@ -68,6 +70,7 @@ func Get() (*Configuration, error) {
 		CloudflareAPIToken:    "",
 		CloudflareBatchSize:   100,
 		CloudflareZoneID:      "",
+		DataPaths:             []string{"/datasets/"},
 		Domains:               []string{defaultDomain},
 		EnableCloudflarePurge: false,
 		EnableCacheAPI:        false,
@@ -77,6 +80,7 @@ func Get() (*Configuration, error) {
 		SlackChannel:          "#sandbox-publish-log",
 		LegacyCacheAPIURL:     "http://localhost:29100",
 		MaxParallel:           10, // default value
+		PDFPaths:              []string{"/bulletins/", "/articles/", "/compendium_chapter/"},
 		SleepFunc: func(d time.Duration) {
 			time.Sleep(d)
 		},

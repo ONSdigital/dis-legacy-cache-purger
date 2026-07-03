@@ -12,6 +12,12 @@ VERSION ?= $(shell git tag --points-at HEAD | grep ^v | head -n 1)
 
 LDFLAGS = -ldflags "-X main.BuildTime=$(BUILD_TIME) -X main.GitCommit=$(GIT_COMMIT) -X main.Version=$(VERSION)"
 
+SEED_COUNT         ?= 1000
+SEED_PDF_COUNT     ?= 100
+SEED_DATA_COUNT    ?= 100
+SEED_PATH         ?= /test/path
+SEED_COLLECTION_ID ?= test-collection
+
 .PHONY: all
 all: audit test build
 
@@ -53,8 +59,8 @@ test-component:
 	exit
 
 .PHONY: seed
-seed: # Populate MongoDB with CacheTime documents
-	mongosh scripts/seed.js
+seed: ## Populate MongoDB with CacheTime documents
+	mongosh --eval "var count=$(SEED_COUNT); var pdfCount=$(SEED_PDF_COUNT); var dataCount=$(SEED_DATA_COUNT); var path='$(SEED_PATH)'; var collectionID='$(SEED_COLLECTION_ID)';" scripts/seed.js
 
 .PHONY: help
 help: ## Show help page for list of make targets

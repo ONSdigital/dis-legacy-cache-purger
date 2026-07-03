@@ -16,4 +16,24 @@ To run:
     make seed
 ```
 
-There are variables inside the script that can be used to configure it - these may be made available at the command line in the future.
+To override parameters:
+
+```sh
+make seed SEED_COUNT=500
+make seed SEED_COUNT=500 SEED_PDF_COUNT=50
+make seed SEED_COUNT=1000 SEED_COLLECTION_ID=my-collection
+```
+
+| Variable             | Default           | Description                                                                                     |
+|----------------------|-------------------|-------------------------------------------------------------------------------------------------|
+| `SEED_COUNT`         | `1000`            | Total number of paths to seed                                                                   |
+| `SEED_PDF_COUNT`     | `100`             | Number of PDF-eligible paths to seed (e.g. `/bulletins/`, `/articles/`, `/compendium_chapter/`) |
+| `SEED_DATA_COUNT`    | `100`             | Number of data-eligible paths to seed (e.g. `/datasets/`)                                       |
+| `SEED_PATH`          | `/test/path`      | Path to seed for normal (non-PDF, non-data) paths                                               |
+| `SEED_COLLECTION_ID` | `test-collection` | Collection ID for all seeded documents                                                          |
+
+You can also run the script directly with `mongosh --eval` to override any variable:
+
+```sh
+mongosh mongodb://localhost:27017 --eval "var count=500; var pdfCount=50; var dataCount=50; var collectionID='test-collection'; var path='/test/path';" scripts/seed.js
+```

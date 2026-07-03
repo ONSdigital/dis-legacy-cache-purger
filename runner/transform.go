@@ -33,27 +33,38 @@ func mapCacheTimeByCollection(ctx context.Context, cacheTimes []*models.CacheTim
 	return result
 }
 
-func mapCollectionCacheTimeMapToRequests(ctx context.Context, collectionCacheTimeMap map[string]CollectionCachePaths) []CollectionCachePurgeRequest {
+func pathMatches(path string, filePaths []string) bool {
+	for _, file := range filePaths {
+		if strings.Contains(path, file) {
+			return true
+		}
+	}
+	return false
+}
+
+func pathToFiles(path string, dataPaths, pdfPaths []string) []string {
+	if strings.Contains(path, "/timeseries/") {
+		return nil
+	}
+	files := []string{fmt.Sprintf("https://%s", path)}
+	if !strings.Contains(path, "?") {
+		if pathMatches(path, dataPaths) {
+			files = append(files, fmt.Sprintf("https://%s/data", path))
+		}
+		if pathMatches(path, pdfPaths) {
+			files = append(files, fmt.Sprintf("https://%s/pdf", path))
+		}
+	}
+	return files
+}
+
+func mapCollectionCacheTimeMapToRequests(ctx context.Context, collectionCacheTimeMap map[string]CollectionCachePaths, dataPaths, pdfPaths []string) []CollectionCachePurgeRequest {
 	requests := make([]CollectionCachePurgeRequest, 0, len(collectionCacheTimeMap))
 	for collectionID, collectionCachePaths := range collectionCacheTimeMap {
 		var prefixes []string
-		var files []string
+		files := make([]string, 0, len(collectionCachePaths.paths))
 		for _, path := range collectionCachePaths.paths {
-			if strings.Contains(path, "/timeseries/") {
-				// exclude timeseries paths.
-				continue
-			}
-
-			// Add standard path.
-			files = append(files, fmt.Sprintf("https://%s", path))
-
-			// If the path does not contain a query string, we can also purge the /data and /pdf versions of the file.
-			if !strings.Contains(path, "?") {
-				files = append(files,
-					fmt.Sprintf("https://%s/data", path),
-					fmt.Sprintf("https://%s/pdf", path),
-				)
-			}
+			files = append(files, pathToFiles(path, dataPaths, pdfPaths)...)
 		}
 		requests = append(requests, CollectionCachePurgeRequest{
 			CollectionID:    collectionID,
@@ -65,7 +76,7 @@ func mapCollectionCacheTimeMapToRequests(ctx context.Context, collectionCacheTim
 	return requests
 }
 
-func transformCacheTimesToCollectionCachePurgeRequests(ctx context.Context, cacheTimes []*models.CacheTime, domains []string) []CollectionCachePurgeRequest {
+func transformCacheTimesToCollectionCachePurgeRequests(ctx context.Context, cacheTimes []*models.CacheTime, domains, dataPaths, pdfPaths []string) []CollectionCachePurgeRequest {
 	cacheTimesByCollectionID := mapCacheTimeByCollection(ctx, cacheTimes, domains)
-	return mapCollectionCacheTimeMapToRequests(ctx, cacheTimesByCollectionID)
+	return mapCollectionCacheTimeMapToRequests(ctx, cacheTimesByCollectionID, dataPaths, pdfPaths)
 }

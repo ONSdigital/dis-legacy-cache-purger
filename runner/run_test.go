@@ -33,6 +33,8 @@ func TestRunnerRun(t *testing.T) {
 		}
 
 		cfg.SleepFunc = fakeSleep
+		cfg.DataPaths = []string{testPath}
+		cfg.PDFPaths = []string{testPath}
 
 		clientList := clients.ClientList{
 			CloudflareCacheClient: &mockClients.CloudflareCacheClienterMock{
@@ -100,6 +102,8 @@ func TestRunnerRun(t *testing.T) {
 		}
 
 		cfg.SleepFunc = fakeSleep
+		cfg.DataPaths = []string{testPath}
+		cfg.PDFPaths = []string{testPath}
 
 		clientList := clients.ClientList{
 			CloudflareCacheClient: &mockClients.CloudflareCacheClienterMock{
