@@ -12,11 +12,14 @@ VERSION ?= $(shell git tag --points-at HEAD | grep ^v | head -n 1)
 
 LDFLAGS = -ldflags "-X main.BuildTime=$(BUILD_TIME) -X main.GitCommit=$(GIT_COMMIT) -X main.Version=$(VERSION)"
 
-SEED_COUNT         ?= 1000
-SEED_PDF_COUNT     ?= 100
-SEED_DATA_COUNT    ?= 100
-SEED_PATH         ?= /test/path
-SEED_COLLECTION_ID ?= test-collection
+SEED_COUNT              ?= 1000
+SEED_PDF_COUNT          ?= 100
+SEED_DATA_COUNT         ?= 100
+SEED_BULLETINS_COUNT    ?= $(SEED_PDF_COUNT)
+SEED_ARTICLES_COUNT     ?= $(SEED_PDF_COUNT)
+SEED_COMPENDIUM_COUNT   ?= $(SEED_PDF_COUNT)
+SEED_PATH               ?= /test/path
+SEED_COLLECTION_ID      ?= test-collection
 
 .PHONY: all
 all: audit test build
