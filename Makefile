@@ -18,6 +18,7 @@ SEED_DATA_COUNT         ?= 100
 SEED_BULLETINS_COUNT    ?= $(SEED_PDF_COUNT)
 SEED_ARTICLES_COUNT     ?= $(SEED_PDF_COUNT)
 SEED_COMPENDIUM_COUNT   ?= $(SEED_PDF_COUNT)
+SEED_PREVIOUS_COUNT     ?= 100
 SEED_PATH               ?= /test/path
 SEED_COLLECTION_ID      ?= test-collection
 
@@ -63,7 +64,7 @@ test-component:
 
 .PHONY: seed
 seed: ## Populate MongoDB with CacheTime documents
-	mongosh --eval "var count=$(SEED_COUNT); var pdfCount=$(SEED_PDF_COUNT); var dataCount=$(SEED_DATA_COUNT); var path='$(SEED_PATH)'; var collectionID='$(SEED_COLLECTION_ID)';" scripts/seed.js
+	mongosh --eval "var count=$(SEED_COUNT); var pdfCount=$(SEED_PDF_COUNT); var dataCount=$(SEED_DATA_COUNT); var bulletinsCount=$(SEED_BULLETINS_COUNT); var articlesCount=$(SEED_ARTICLES_COUNT); var compendiumCount=$(SEED_COMPENDIUM_COUNT); var previousCount=$(SEED_PREVIOUS_COUNT); var path='$(SEED_PATH)'; var collectionID='$(SEED_COLLECTION_ID)';" scripts/seed.js
 
 .PHONY: help
 help: ## Show help page for list of make targets

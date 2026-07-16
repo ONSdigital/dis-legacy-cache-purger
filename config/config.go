@@ -44,6 +44,7 @@ type Configuration struct {
 	CloudflareZoneID      string              `envconfig:"CLOUDFLARE_ZONE_ID" json:"-"`
 	DataPaths             StringList          `envconfig:"DATA_PATHS" json:"data_paths"`
 	Domains               StringList          `envconfig:"DOMAINS" json:"domains"`
+	ExcludedPaths         StringList          `envconfig:"EXCLUDED_PATHS" json:"excluded_paths"`
 	EnableCloudflarePurge bool                `envconfig:"ENABLE_CLOUDFLARE_PURGE" json:"enable_cloudflare_purge"`
 	EnableCacheAPI        bool                `envconfig:"ENABLE_CACHE_API" json:"enable_cache_api"`
 	EnableSlackAlerts     bool                `envconfig:"ENABLE_SLACK_ALERTS" json:"enable_slack_alerts"`
@@ -72,6 +73,7 @@ func Get() (*Configuration, error) {
 		CloudflareZoneID:      "",
 		DataPaths:             []string{"/datasets/"},
 		Domains:               []string{defaultDomain},
+		ExcludedPaths:         []string{"/timeseries/", "/previous/"},
 		EnableCloudflarePurge: false,
 		EnableCacheAPI:        false,
 		EnableSlackAlerts:     false,

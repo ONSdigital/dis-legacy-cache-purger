@@ -9,7 +9,10 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-const testPath = "/path"
+const (
+	testPath         = "/path"
+	testDatasetsPath = "/datasets/"
+)
 
 func TestMapCacheTimeByCollection(t *testing.T) {
 	Convey("Given a list of CacheTime objects and domains", t, func() {
@@ -103,9 +106,10 @@ func TestMapCollectionCacheTimeMapToRequests(t *testing.T) {
 		ctx := context.Background()
 		dataPaths := []string{"/prefix2/"}
 		pdfPaths := []string{"/prefix1/"}
+		excludedPaths := []string{}
 
 		Convey("When mapCollectionCacheTimeMapToRequests is called", func() {
-			requests := mapCollectionCacheTimeMapToRequests(ctx, cacheTimeMap, dataPaths, pdfPaths)
+			requests := mapCollectionCacheTimeMapToRequests(ctx, cacheTimeMap, dataPaths, pdfPaths, excludedPaths)
 
 			Convey("Then it should return the expected CollectionCachePurgeRequests", func() {
 				expected := []CollectionCachePurgeRequest{
@@ -144,7 +148,7 @@ func TestTransformCacheTimesToCollectionCachePurgeRequests(t *testing.T) {
 		ctx := context.Background()
 
 		Convey("When transformCacheTimesToCollectionCachePurgeRequests is called", func() {
-			requests := transformCacheTimesToCollectionCachePurgeRequests(ctx, cacheTimes, domains, []string{testPath}, []string{testPath})
+			requests := transformCacheTimesToCollectionCachePurgeRequests(ctx, cacheTimes, domains, []string{testPath}, []string{testPath}, []string{})
 
 			Convey("Then it should return the expected CollectionCachePurgeRequests", func() {
 				expected := []CollectionCachePurgeRequest{
@@ -179,6 +183,37 @@ func TestTransformCacheTimesToCollectionCachePurgeRequests(t *testing.T) {
 				}
 				So(requests, ShouldContain, expected[0])
 				So(requests, ShouldContain, expected[1])
+			})
+		})
+	})
+}
+
+func TestPathToFilesExcludedPaths(t *testing.T) {
+	Convey("Given a path that matches an excluded pattern", t, func() {
+		excludedPaths := []string{"/timeseries/", "/previous/"}
+
+		Convey("When the path contains /previous/", func() {
+			result := pathToFiles("domain.com/datasets/some-dataset/current/previous/v131", []string{testDatasetsPath}, []string{}, excludedPaths)
+
+			Convey("Then it should return nil", func() {
+				So(result, ShouldBeNil)
+			})
+		})
+
+		Convey("When the path contains /timeseries/", func() {
+			result := pathToFiles("domain.com/economy/timeseries/abc123", []string{testDatasetsPath}, []string{}, excludedPaths)
+
+			Convey("Then it should return nil", func() {
+				So(result, ShouldBeNil)
+			})
+		})
+
+		Convey("When the path does not match any excluded pattern", func() {
+			result := pathToFiles("domain.com/datasets/some-dataset/current", []string{testDatasetsPath}, []string{}, excludedPaths)
+
+			Convey("Then it should return file entries", func() {
+				So(result, ShouldNotBeNil)
+				So(len(result), ShouldEqual, 2)
 			})
 		})
 	})

@@ -2,13 +2,9 @@
 // Usage: mongosh <mongo-uri> scripts/seed.js
 // Parameters injected via --eval by the Makefile seed target
 
-const bulletinsCount  = (bulletinsCount  === undefined) ? pdfCount : bulletinsCount;
-const articlesCount   = (articlesCount   === undefined) ? pdfCount : articlesCount;
-const compendiumCount = (compendiumCount === undefined) ? pdfCount : compendiumCount;
-
 const totalPdfCount = bulletinsCount + articlesCount + compendiumCount;
 const dataPaths = ['/datasets/test'];
-const normalCount = count - totalPdfCount - dataPaths.length * dataCount;
+const normalCount = count - totalPdfCount - dataPaths.length * dataCount - previousCount;
 const collection = 'cachetimes';
 const dbName = 'cache';
 const publicationCollectionID = collectionID;
@@ -30,7 +26,7 @@ for (let i = 0; i < normalCount; i++) {
 for (const { path, n } of [
     { path: '/bulletins/test',          n: bulletinsCount },
     { path: '/articles/test',           n: articlesCount },
-    { path: '/compendium_chapter/test', n: compendiumCount },
+    { path: '/compendium/test', n: compendiumCount },
 ]) {
     for (let i = 0; i < n; i++) {
         docs.push({
@@ -51,6 +47,14 @@ for (const path of dataPaths) {
         });
     }
 }
-const totalCount = normalCount + totalPdfCount + dataPaths.length * dataCount;
+for (let i = 0; i < previousCount; i++) {
+    docs.push({
+        collection_id: publicationCollectionID,
+        collection_title: publicationCollectionName,
+        path: '/datasets/test/' + i + '/current/previous/v' + i,
+        release_time: releaseTime
+    });
+}
+const totalCount = normalCount + totalPdfCount + dataPaths.length * dataCount + previousCount;
 dbHandle[collection].insertMany(docs);
-print('Inserted ' + totalCount + ' documents into cache.' + collection + ' (' + normalCount + ' normal, ' + totalPdfCount + ' pdf-eligible [bulletins=' + bulletinsCount + ' articles=' + articlesCount + ' compendium=' + compendiumCount + '], ' + dataPaths.length * dataCount + ' data-eligible)');
+print('Inserted ' + totalCount + ' documents into cache.' + collection + ' (' + normalCount + ' normal, ' + totalPdfCount + ' pdf-eligible [bulletins=' + bulletinsCount + ' articles=' + articlesCount + ' compendium=' + compendiumCount + '], ' + dataPaths.length * dataCount + ' data-eligible, ' + previousCount + ' previous/excluded)');

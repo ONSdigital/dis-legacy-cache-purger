@@ -42,8 +42,8 @@ func pathMatches(path string, filePaths []string) bool {
 	return false
 }
 
-func pathToFiles(path string, dataPaths, pdfPaths []string) []string {
-	if strings.Contains(path, "/timeseries/") {
+func pathToFiles(path string, dataPaths, pdfPaths, excludedPaths []string) []string {
+	if pathMatches(path, excludedPaths) {
 		return nil
 	}
 	files := []string{fmt.Sprintf("https://%s", path)}
@@ -58,13 +58,13 @@ func pathToFiles(path string, dataPaths, pdfPaths []string) []string {
 	return files
 }
 
-func mapCollectionCacheTimeMapToRequests(ctx context.Context, collectionCacheTimeMap map[string]CollectionCachePaths, dataPaths, pdfPaths []string) []CollectionCachePurgeRequest {
+func mapCollectionCacheTimeMapToRequests(ctx context.Context, collectionCacheTimeMap map[string]CollectionCachePaths, dataPaths, pdfPaths, excludedPaths []string) []CollectionCachePurgeRequest {
 	requests := make([]CollectionCachePurgeRequest, 0, len(collectionCacheTimeMap))
 	for collectionID, collectionCachePaths := range collectionCacheTimeMap {
 		var prefixes []string
 		files := make([]string, 0, len(collectionCachePaths.paths))
 		for _, path := range collectionCachePaths.paths {
-			files = append(files, pathToFiles(path, dataPaths, pdfPaths)...)
+			files = append(files, pathToFiles(path, dataPaths, pdfPaths, excludedPaths)...)
 		}
 		requests = append(requests, CollectionCachePurgeRequest{
 			CollectionID:    collectionID,
@@ -76,7 +76,7 @@ func mapCollectionCacheTimeMapToRequests(ctx context.Context, collectionCacheTim
 	return requests
 }
 
-func transformCacheTimesToCollectionCachePurgeRequests(ctx context.Context, cacheTimes []*models.CacheTime, domains, dataPaths, pdfPaths []string) []CollectionCachePurgeRequest {
+func transformCacheTimesToCollectionCachePurgeRequests(ctx context.Context, cacheTimes []*models.CacheTime, domains, dataPaths, pdfPaths, excludedPaths []string) []CollectionCachePurgeRequest {
 	cacheTimesByCollectionID := mapCacheTimeByCollection(ctx, cacheTimes, domains)
-	return mapCollectionCacheTimeMapToRequests(ctx, cacheTimesByCollectionID, dataPaths, pdfPaths)
+	return mapCollectionCacheTimeMapToRequests(ctx, cacheTimesByCollectionID, dataPaths, pdfPaths, excludedPaths)
 }

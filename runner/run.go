@@ -31,7 +31,7 @@ func (p *PurgeRunner) Run(ctx context.Context, publishTime time.Time) (*PurgeRun
 		}, nil
 	}
 
-	cachePurgeRequests := transformCacheTimesToCollectionCachePurgeRequests(ctx, cacheTimes, p.config.Domains, p.config.DataPaths, p.config.PDFPaths)
+	cachePurgeRequests := transformCacheTimesToCollectionCachePurgeRequests(ctx, cacheTimes, p.config.Domains, p.config.DataPaths, p.config.PDFPaths, p.config.ExcludedPaths)
 
 	for _, req := range cachePurgeRequests {
 		log.Info(ctx, "waiting to purge cache for collection", log.Data{
