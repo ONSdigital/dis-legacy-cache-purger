@@ -82,7 +82,7 @@ func Get() (*Configuration, error) {
 		SlackChannel:          "#sandbox-publish-log",
 		LegacyCacheAPIURL:     "http://localhost:29100",
 		MaxParallel:           10, // default value
-		PDFPaths:              []string{"/bulletins/", "/articles/", "/compendium/, /methodologies/"},
+		PDFPaths:              []string{"/bulletins/", "/articles/", "/compendium/", "/methodologies/"},
 		SleepFunc: func(d time.Duration) {
 			time.Sleep(d)
 		},

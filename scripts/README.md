@@ -25,13 +25,13 @@ make seed SEED_COUNT=500 SEED_DATA_COUNT=50
 make seed SEED_COUNT=1000 SEED_COLLECTION_ID=my-collection
 ```
 
-| Variable             | Default           | Description                                                                                     |
-|----------------------|-------------------|-------------------------------------------------------------------------------------------------|
-| `SEED_COUNT`         | `1000`            | Total number of paths to seed                                                                   |
-| `SEED_PDF_COUNT`     | `100`             | Number of PDF-eligible paths to seed (e.g. `/bulletins/`, `/articles/`, `/compendium_chapter/`) |
-| `SEED_DATA_COUNT`    | `100`             | Number of data-eligible paths to seed (e.g. `/datasets/`)                                       |
-| `SEED_PATH`          | `/test/path`      | Path to seed for normal (non-PDF, non-data) paths                                               |
-| `SEED_COLLECTION_ID` | `test-collection` | Collection ID for all seeded documents                                                          |
+| Variable             | Default           | Description                                                                             |
+|----------------------|-------------------|-----------------------------------------------------------------------------------------|
+| `SEED_COUNT`         | `1000`            | Total number of paths to seed                                                           |
+| `SEED_PDF_COUNT`     | `100`             | Number of PDF-eligible paths to seed (e.g. `/bulletins/`, `/articles/`, `/compendium/`) |
+| `SEED_DATA_COUNT`    | `100`             | Number of data-eligible paths to seed (e.g. `/datasets/`)                               |
+| `SEED_PATH`          | `/test/path`      | Path to seed for normal (non-PDF, non-data) paths                                       |
+| `SEED_COLLECTION_ID` | `test-collection` | Collection ID for all seeded documents                                                  |
 
 You can also run the script directly with `mongosh --eval` to override any variable:
 

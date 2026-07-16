@@ -12,23 +12,23 @@ dis-legacy-cache-purger - a scheduler application for automating the purging of 
 
 ### Configuration
 
-| Environment variable           | Default                                             | Description                                                                                                 |
-|--------------------------------|-----------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
-| CACHE_PURGE_DIFF_TIME          | 30s                                                 | Time to wait before purging cache after publish (difference window)                                         |
-| CLOUDFLARE_API_TOKEN           | ""                                                  | The API token for Cloudflare                                                                                |
-| CLOUDFLARE_BATCH_SIZE          | 100                                                 | Number of paths per batch for Cloudflare purge                                                              |
-| CLOUDFLARE_ZONE_ID             | ""                                                  | The Cloudflare Zone ID                                                                                      |
-| DATA_PATHS                     | "/datasets/"                                        | Controls which paths need `/data` purging, `/` purges `/data` for all paths, empty disables `/data` purging |
-| DOMAINS                        | "sandbox.onsdigital.co.uk"                          | Comma separated list of domains to use for cache purging                                                    |
-| ENABLE_CACHE_API               | false                                               | Enable use of the legacy cache API                                                                          |
-| ENABLE_CLOUDFLARE_PURGE        | false                                               | Enable Cloudflare cache purging                                                                             |
-| ENABLE_SLACK_ALERTS            | false                                               | Enable Slack alert notifications                                                                            |
-| LEGACY_CACHE_API_SERVICE_TOKEN | "cache-purger-test-auth-token"                      | The service auth token to connect to dp-legacy-cache-api                                                    |
-| LEGACY_CACHE_API_URL           | "<http://localhost:29100>"                          | The URL for dp-legacy-cache-api                                                                             |
-| MAX_PARALLEL                   | 10                                                  | Maximum number of parallel Cloudflare purge requests                                                        |
-| PDF_PATHS                      | "/bulletins/", "/articles/", "/compendium_chapter/" | Controls which paths need PDF purging, `/` purges `/pdf` for all paths, empty disables `/pdf` purging       |
-| SLACK_API_TOKEN                | ""                                                  | The API token for Slack                                                                                     |
-| SLACK_CHANNEL                  | "#sandbox-publish-log"                              | The Slack channel to send notifications to                                                                  |
+| Environment variable           | Default                                                        | Description                                                                                                 |
+|--------------------------------|----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| CACHE_PURGE_DIFF_TIME          | 30s                                                            | Time to wait before purging cache after publish (difference window)                                         |
+| CLOUDFLARE_API_TOKEN           | ""                                                             | The API token for Cloudflare                                                                                |
+| CLOUDFLARE_BATCH_SIZE          | 100                                                            | Number of paths per batch for Cloudflare purge                                                              |
+| CLOUDFLARE_ZONE_ID             | ""                                                             | The Cloudflare Zone ID                                                                                      |
+| DATA_PATHS                     | "/datasets/"                                                   | Controls which paths need `/data` purging, `/` purges `/data` for all paths, empty disables `/data` purging |
+| DOMAINS                        | "sandbox.onsdigital.co.uk"                                     | Comma separated list of domains to use for cache purging                                                    |
+| ENABLE_CACHE_API               | false                                                          | Enable use of the legacy cache API                                                                          |
+| ENABLE_CLOUDFLARE_PURGE        | false                                                          | Enable Cloudflare cache purging                                                                             |
+| ENABLE_SLACK_ALERTS            | false                                                          | Enable Slack alert notifications                                                                            |
+| LEGACY_CACHE_API_SERVICE_TOKEN | "cache-purger-test-auth-token"                                 | The service auth token to connect to dp-legacy-cache-api                                                    |
+| LEGACY_CACHE_API_URL           | "<http://localhost:29100>"                                     | The URL for dp-legacy-cache-api                                                                             |
+| MAX_PARALLEL                   | 10                                                             | Maximum number of parallel Cloudflare purge requests                                                        |
+| PDF_PATHS                      | "/bulletins/", "/articles/", "/compendium/", "/methodologies/" | Controls which paths need PDF purging, `/` purges `/pdf` for all paths, empty disables `/pdf` purging       |
+| SLACK_API_TOKEN                | ""                                                             | The API token for Slack                                                                                     |
+| SLACK_CHANNEL                  | "#sandbox-publish-log"                                         | The Slack channel to send notifications to                                                                  |
 
 ### Tools
 
